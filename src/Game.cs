@@ -4,6 +4,7 @@ class Game
 	private Room currentRoom;
 	private Player player;
 	private Item knife;
+	private Item key;
 
 	public Game()
 	{
@@ -15,7 +16,8 @@ class Game
 
 	private void CreateItems()
 	{
-		knife = new Item(5, "knife");
+		knife = new Item(10, "knife", true, 10);
+		key = new Item(5, "key", false, 0);
 	}
 
 	private void CreateRooms()
@@ -31,13 +33,16 @@ class Game
 		outside.AddExit("west", pub);
 
 		theatre.AddExit("west", outside);
+		theatre.AddEnemy("Anonymous Person", 100, 5);
 
 		pub.AddExit("east", outside);
 
+		lab.AddItem(key);
 		lab.AddExit("north", outside);
 		lab.AddExit("east", office);
 
 		office.AddExit("west", lab);
+		office.Lock("key");
 		office.AddItem(knife);
 
 		currentRoom = outside;
@@ -81,7 +86,7 @@ class Game
 		Console.WriteLine("        \\/                 ");
 		Console.ResetColor();
 		Console.WriteLine("Zuul is a new, incredibly boring adventure game.");
-		Console.WriteLine("Type 'help' if you need help.");
+		Console.WriteLine("Type 'help' to see what your commands are.");
 		Console.WriteLine();
 		Console.WriteLine(currentRoom.GetLongDescription());
 	}
@@ -150,16 +155,34 @@ class Game
 
 		string direction = command.SecondWord;
 
-		Room nextRoom = currentRoom.GetExit(direction);
+		Room nextRoom = currentRoom.GetExit(direction, player.Inventory);
 
 		if (nextRoom == null)
 		{
-			Console.WriteLine("There is no door!");
+			Console.WriteLine("There is nothing there...");
+		}
+		else if (nextRoom.Locked)
+		{
+			if (player.Inventory.Contains("key"))
+			{
+				currentRoom = nextRoom;
+				nextRoom.Unlock(nextRoom.Key);
+				player.CurrentRoom.Leave();
+				player.CurrentRoom = nextRoom;
+				nextRoom.Enter(player);
+				Console.WriteLine(currentRoom.GetLongDescription());
+			}
+			else
+			{
+				Console.WriteLine("The room is locked. You need to find a key to enter.");
+			}
 		}
 		else
 		{
 			currentRoom = nextRoom;
+			player.CurrentRoom.Leave();
 			player.CurrentRoom = nextRoom;
+			nextRoom.Enter(player);
 			Console.WriteLine(currentRoom.GetLongDescription());
 		}
 	}
@@ -177,7 +200,7 @@ class Game
 				{
 					Console.Write(", ");
 				}
-				Console.Write("a " + item);
+				Console.Write("a " + item.Description);
 				firstItem = false;
 			}
 			Console.WriteLine();
@@ -188,7 +211,7 @@ class Game
 	{
 		Console.WriteLine("Health: " + player.GetHealth());
 		Console.WriteLine();
-		Console.WriteLine("Player Inventory:");
+		Console.WriteLine("Player Inventory " + "(free weight: " + player.Inventory.FreeWeight() + ")" + ":");
 
 		if (player.Inventory.Items.Count == 0)
 		{
@@ -198,7 +221,7 @@ class Game
 		{
 			foreach (var item in player.Inventory.Items)
 			{
-				Console.WriteLine(item);
+				Console.WriteLine(item.Value.Description + " (" + item.Value.Weight + " weight)");
 			}
 		}
 	}
