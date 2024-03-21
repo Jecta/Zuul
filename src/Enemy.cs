@@ -16,10 +16,15 @@ public class Enemy
         Health = health;
         AttackPower = attackPower;
 
-        attackTimer = new System.Timers.Timer(5000);
+        attackTimer = new System.Timers.Timer(7000);
         attackTimer.Elapsed += AttackTimerElapsed;
         attackTimer.AutoReset = true;
         attackTimer.Start();
+    }
+
+    public void GetEnemy()
+    {
+        Console.WriteLine("You see " + Name);
     }
 
     public void PlayerEntered(Player player)
@@ -45,6 +50,19 @@ public class Enemy
         DamagePlayer();
     }
 
+    public void DamageEnemy(int damage)
+    {
+        Health -= damage;
+        if (Health <= 0)
+        {
+            attackTimer.Stop();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n" + $"{Name} has been defeated!");
+            Console.ResetColor();
+            Console.Write("> ");
+        }
+    }
+
     private void DamagePlayer()
     {
         if (targetPlayer is not null)
@@ -54,6 +72,16 @@ public class Enemy
             Console.WriteLine("\n" + $"{Name} attacked you for {AttackPower} damage! Use 'attack' repeatedly to fight back!");
             Console.ResetColor();
             Console.Write("> ");
+
+            if (targetPlayer.GetHealth() <= 0)
+            {
+                attackTimer.Stop();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n" + $"{Name} has killed you.");
+                Console.WriteLine("Press [Enter] to continue...");
+                Console.WriteLine("");
+                Console.ResetColor();
+            }
         }
     }
 }

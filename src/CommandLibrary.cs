@@ -4,7 +4,7 @@ class CommandLibrary
 
 	public CommandLibrary()
 	{
-		validCommands = new HashSet<string> { "help", "go", "quit", "look", "status", "show", "status", "take", "drop", "use", "attack" };
+		validCommands = new HashSet<string> { "help", "go", "quit", "look", "status", "take", "drop", "use", "attack" };
 	}
 
 	public bool IsValidCommandWord(string instring)

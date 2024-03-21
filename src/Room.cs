@@ -116,4 +116,9 @@ public class Room
 			enemy.PlayerLeft();
 		}
 	}
+
+	public Enemy GetEnemy()
+	{
+		return enemies.FirstOrDefault();
+	}
 }

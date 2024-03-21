@@ -33,7 +33,7 @@ class Game
 		outside.AddExit("west", pub);
 
 		theatre.AddExit("west", outside);
-		theatre.AddEnemy("Anonymous Person", 100, 5);
+		theatre.AddEnemy("Anonymous Person", 100, 10);
 
 		pub.AddExit("east", outside);
 
@@ -86,7 +86,9 @@ class Game
 		Console.WriteLine("        \\/                 ");
 		Console.ResetColor();
 		Console.WriteLine("Zuul is a new, incredibly boring adventure game.");
+		Console.ForegroundColor = ConsoleColor.Green;
 		Console.WriteLine("Type 'help' to see what your commands are.");
+		Console.ResetColor();
 		Console.WriteLine();
 		Console.WriteLine(currentRoom.GetLongDescription());
 	}
@@ -108,7 +110,6 @@ class Game
 				break;
 			case "go":
 				GoRoom(command);
-				player.Damage(10);
 				break;
 			case "quit":
 				wantToQuit = true;
@@ -140,6 +141,7 @@ class Game
 	{
 		Console.WriteLine("You are lost and alone.");
 		Console.WriteLine("You wander around at the university.");
+		Console.WriteLine("You're bleading every step you take. You need to find a way to stop the bleeding or restore your health.");
 		Console.WriteLine();
 		parser.PrintValidCommands();
 	}
@@ -171,6 +173,7 @@ class Game
 				player.CurrentRoom = nextRoom;
 				nextRoom.Enter(player);
 				Console.WriteLine(currentRoom.GetLongDescription());
+				player.Damage(10);
 			}
 			else
 			{
@@ -184,6 +187,7 @@ class Game
 			player.CurrentRoom = nextRoom;
 			nextRoom.Enter(player);
 			Console.WriteLine(currentRoom.GetLongDescription());
+			player.Damage(10);
 		}
 	}
 
@@ -283,7 +287,7 @@ class Game
 		{
 			if (player.Inventory.Contains(item))
 			{
-				Console.WriteLine("You used " + item);
+				Console.WriteLine("You tried to use " + item + " but there is nothing to use it on");
 			}
 			else
 			{
@@ -306,29 +310,24 @@ class Game
 
 	private void Attack(Command command)
 	{
-		if (!command.HasSecondWord())
+		var enemy = player.CurrentRoom.GetEnemy();
+		if (enemy != null)
 		{
-			Console.WriteLine("Who do you want to attack?");
-			return;
-		}
-
-		string target = command.SecondWord;
-
-		if (!command.HasThirdWord())
-		{
-			Console.WriteLine("What do you want to attack " + target + " with?");
-			return;
-		}
-
-		string weapon = command.ThirdWord;
-
-		if (player.Inventory.Contains(weapon))
-		{
-			Console.WriteLine("You attacked " + target + " with " + weapon);
+			if (player.Inventory.Contains("knife"))
+			{
+				enemy.DamageEnemy(knife.Damage);
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine("You attacked " + enemy.Name + " for " + knife.Damage + " damage");
+				Console.ResetColor();
+			}
+			else
+			{
+				Console.WriteLine("You need a knife to attack");
+			}
 		}
 		else
 		{
-			Console.WriteLine("You don't have " + weapon);
+			Console.WriteLine("There is no enemy in this room to attack.");
 		}
 	}
 
