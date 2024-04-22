@@ -1,5 +1,6 @@
 
 using System.Timers;
+using System.Diagnostics;
 
 public class Enemy
 {
@@ -57,9 +58,9 @@ public class Enemy
         {
             attackTimer.Stop();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\n" + $"{Name} has been defeated!");
+            Console.WriteLine("\n" + $"{Name} has been defeated, you've won the game!");
             Console.ResetColor();
-            Console.Write("> ");
+            Process.GetCurrentProcess().Kill();
         }
     }
 

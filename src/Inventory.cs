@@ -6,7 +6,7 @@ public class Inventory
     public Inventory(int maxWeight)
     {
         this.maxWeight = maxWeight;
-        this.items = new Dictionary<string, Item>();
+        items = new Dictionary<string, Item>();
     }
 
     public bool AddItem(Item item)
@@ -16,10 +16,8 @@ public class Inventory
             items[item.Description] = item;
             return true;
         }
-        else
-        {
-            return false;
-        }
+        
+        return false;
     }
 
     public Item RemoveItem(string itemName)
@@ -30,10 +28,8 @@ public class Inventory
             items.Remove(itemName);
             return item;
         }
-        else
-        {
-            return null;
-        }
+        
+        return null;
     }
 
     public int TotalWeight()
@@ -51,10 +47,7 @@ public class Inventory
         return maxWeight - TotalWeight();
     }
 
-    public Dictionary<string, Item> Items
-    {
-        get { return items; }
-    }
+    public Dictionary<string, Item> Items => items;
 
     public bool Contains(string itemName)
     {

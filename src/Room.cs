@@ -19,8 +19,7 @@ public class Room
 
 	public void AddEnemy(string name, int health, int attackPower)
 	{
-		Enemy enemy = new Enemy(name, health, attackPower);
-		enemies.Add(enemy);
+		enemies.Add(new Enemy(name, health, attackPower));
 	}
 
 	public void AddExit(string direction, Room neighbor)
@@ -33,15 +32,9 @@ public class Room
 		return isLocked;
 	}
 
-	public string GetShortDescription()
-	{
-		return description;
-	}
+	public string GetShortDescription() => description;
 
-	public string GetLongDescription()
-	{
-		return $"You are {description}.\n{GetExitString()}";
-	}
+	public string GetLongDescription() => $"You are {description}.\n{GetExitString()}";
 
 	public Room GetExit(string direction, Inventory playerInventory)
 	{
@@ -55,35 +48,15 @@ public class Room
 		return exit;
 	}
 
-	private string GetExitString()
-	{
-		string returnString = "Exits:";
-		foreach (string exit in exits.Keys)
-		{
-			returnString += " " + exit;
-		}
-		return returnString;
-	}
+	private string GetExitString() => "Exits: " + string.Join(" ", exits.Keys);
 
-	public bool AddItem(Item item)
-	{
-		return chest.AddItem(item);
-	}
+	public bool AddItem(Item item) => chest.AddItem(item);
 
-	public Item RemoveItem(string itemName)
-	{
-		return chest.RemoveItem(itemName);
-	}
+	public Item RemoveItem(string itemName) => chest.RemoveItem(itemName);
 
-	public Dictionary<string, Item> Items
-	{
-		get { return chest.Items; }
-	}
+	public Dictionary<string, Item> Items => chest.Items;
 
-	public Inventory Chest
-	{
-		get { return chest; }
-	}
+	public Inventory Chest => chest;
 
 	public void Lock(string key)
 	{
@@ -117,8 +90,5 @@ public class Room
 		}
 	}
 
-	public Enemy GetEnemy()
-	{
-		return enemies.FirstOrDefault();
-	}
+	public Enemy GetEnemy() => enemies.FirstOrDefault();
 }

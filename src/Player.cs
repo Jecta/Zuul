@@ -21,15 +21,9 @@ public class Player
         health = Math.Min(health + amount, 100);
     }
 
-    public bool IsAlive()
-    {
-        return health > 0;
-    }
+    public bool IsAlive() => health > 0;
 
-    public int GetHealth()
-    {
-        return health;
-    }
+    public int GetHealth() => health;
 
     public bool TakeFromChest(string itemName)
     {

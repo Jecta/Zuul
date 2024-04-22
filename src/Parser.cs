@@ -12,9 +12,10 @@ class Parser
 		Console.Write("> ");
 
 		string[] words = Console.ReadLine().Split(' ');
-		string word1 = words.Length > 0 ? words[0] : null;
-		string word2 = words.Length > 1 ? words[1] : null;
-		string word3 = words.Length > 2 ? words[2] : null;
+
+		string word1 = words.ElementAtOrDefault(0);
+		string word2 = words.ElementAtOrDefault(1);
+		string word3 = words.ElementAtOrDefault(2);
 
 		return commandLibrary.IsValidCommandWord(word1) ? new Command(word1, word2, word3) : new Command(null, null, null);
 	}
